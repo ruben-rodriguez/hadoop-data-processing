@@ -1,5 +1,6 @@
 # java-hadoop-data-processing
-Data Processing applications writteng in Java and ported to Hadoop
+Data Processing applications written in Java and ported to Hadoop.
+The purpose is to extract statistics from this Dataset [Spanish Rail Tickets Pricing - Renfe](https://www.kaggle.com/thegurusteam/spanish-high-speed-rail-system-ticket-pricing)
 
 ## Base Java App: javaDataProcessing
 

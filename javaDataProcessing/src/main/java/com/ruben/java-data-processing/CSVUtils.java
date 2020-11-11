@@ -3,6 +3,8 @@ package com.ruben.javaDataProcessing;
 import java.io.FileReader; 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.ArrayList; 
@@ -129,25 +131,39 @@ public class CSVUtils {
               }
           
             }
-            //System.out.println(Arrays.asList(origins));
-            //System.out.println(Arrays.asList(destinations));
-            int maxValueInOrigMap=(Collections.max(origins.values()));  // This will return max value in the Hashmap
-            for (Entry<String, Integer> entry : origins.entrySet()) {  // Itrate through hashmap
+
+            System.out.println();
+            int maxValueInOrigMap=(Collections.max(origins.values())); 
+            for (Entry<String, Integer> entry : origins.entrySet()) { 
                 if (entry.getValue() == maxValueInOrigMap) {
                     System.out.println("\tMost frecuent origin: " + entry.getKey() + " with " + maxValueInOrigMap + " counts.");     // Print the key with max value
                 }
             }
-            int maxValueInDstMap=(Collections.max(destinations.values()));  // This will return max value in the Hashmap
-            for (Entry<String, Integer> entry : destinations.entrySet()) {  // Itrate through hashmap
+
+            int maxValueInDstMap=(Collections.max(destinations.values())); 
+            for (Entry<String, Integer> entry : destinations.entrySet()) {  
                 if (entry.getValue() == maxValueInDstMap) {
                     System.out.println("\tMost frecuent destination: " + entry.getKey() + " with " + maxValueInDstMap + " counts.");     // Print the key with max value
                 }
             }
+
+            printMap(origins);
+            printMap(destinations);
 
         }
         catch (Exception e) { 
             e.printStackTrace(); 
         } 
         
+    }
+
+    public void printMap(Map<String, Integer> map){
+
+        Set < String > keys = map.keySet(); 
+        TreeSet < String > sortedKeys = new TreeSet < > (keys);
+        for (String str: sortedKeys) {
+            System.out.println("\tOrigin: " + str + " count: " + map.get(str));
+        }
+
     }
 }

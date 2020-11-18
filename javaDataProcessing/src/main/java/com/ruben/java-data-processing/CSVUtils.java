@@ -12,20 +12,19 @@ import java.util.Collections;
 import java.util.Arrays;
 import com.opencsv.*; 
 import java.io.File;
+import java.text.DecimalFormat;
+
 
 public class CSVUtils { 
       
-    public double getMinMaxPrice(String filename) {
+    public void getMeanPrice(String filename) {
         
-        List<String[]> allData =  new ArrayList<>();
-
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(filename).getFile());
-        double maxPrice = 0;
-        double minPrice = 0;
         
         try { 
   
+            Map<String, List<Double>> map = new HashMap<String, List<Double>>();
             FileReader filereader = new FileReader(file.getAbsolutePath()); 
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
@@ -35,27 +34,45 @@ public class CSVUtils {
             
             while ((row = csvReader.readNext()) != null) {
 
-                if(!row[9].isEmpty()) {
+                if(!row[8].isEmpty() && !row[9].isEmpty()) {
 
-                    double rowPrice = Double.parseDouble(row[9]);
-
-                    if(rowPrice > maxPrice)
-                        maxPrice = rowPrice;
-
-                    if(rowPrice < minPrice)
-                        minPrice = rowPrice;
+                    String fare = row[8];
+                    Double rowPrice = Double.parseDouble(row[9]);
+                    
+                    if(map.containsKey(fare)) {
+                        map.get(fare).add(rowPrice);
+                    } else {
+                        List<Double> values = new ArrayList<Double>();
+                        values.add(rowPrice);
+                        map.put(fare, values);
+                    }
 
                 }
                
             }
+
+            DecimalFormat df = new DecimalFormat("#.##");      
+
+            for (Map.Entry<String, List<Double>> entry : map.entrySet()) {
+                
+                List<Double> values = entry.getValue();
+                Double total = 0.0;
+                
+                for (int i = 0; i < values.size(); i++) {
+                    total += values.get(i);
+                }
+                Double mean = total / values.size();
+                Double formatted = Double.valueOf(df.format(mean));
+                System.out.println("\tClass: " + entry.getKey() + " mean price: " + formatted);
+              }
             
-        } 
+            //System.out.println(map.toString());
+            
+        }
         catch (Exception e) { 
             e.printStackTrace(); 
         } 
-        
-        System.out.println("\tMax trip price: " +maxPrice + "\n");
-        return maxPrice;
+
     }
 
 

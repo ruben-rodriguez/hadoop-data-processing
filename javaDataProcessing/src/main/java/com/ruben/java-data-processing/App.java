@@ -24,7 +24,7 @@ public class App
             System.out.println("\t1 - Most frequent schedules.");
             System.out.println("\t2 - Most frequent trip origins and destinations.");
             System.out.println("\t3 - Most frequent type of vehicle.");
-            System.out.println("\t4 - Mean price per trip fare.");
+            System.out.println("\t4 - Mean price per trip class.");
             System.out.println("\t5 - Type of train by origin and destination.");
             System.out.println("\t6 - Exit\n");
         
@@ -45,7 +45,7 @@ public class App
                         csvParser.countByVehicle(CSV_FILE_NAME);
                         break;
                     case 4:
-                        //TO-DO
+                        csvParser.getMeanPrice(CSV_FILE_NAME);
                         break;
                     case 5:
                         //TO-DO

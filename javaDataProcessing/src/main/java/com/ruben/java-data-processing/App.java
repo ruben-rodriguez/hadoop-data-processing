@@ -21,10 +21,12 @@ public class App
         while (!exit) {
 
             System.out.println();
-            System.out.println("\t1 - Get Min and Max Trip prices!");
-            System.out.println("\t2 - Origins and Destination counts!");
-            System.out.println("\t3 - Print all Data");
-            System.out.println("\t4 - Exit\n");
+            System.out.println("\t1 - Most frequent schedules.");
+            System.out.println("\t2 - Most frequent trip origins and destinations.");
+            System.out.println("\t3 - Most frequent type of vehicle.");
+            System.out.println("\t4 - Mean price per trip fare.");
+            System.out.println("\t5 - Type of train by origin and destination.");
+            System.out.println("\t6 - Exit\n");
         
             try {
 
@@ -34,23 +36,21 @@ public class App
 
                 switch (option) {
                     case 1:
-                        System.out.println("\n\tCalculating Min and Max Trip prices...\n\n");
-                        Double maxPrice = csvParser.getMinMaxPrice(CSV_FILE_NAME);
+                        //TO-DO
                         break;
                     case 2:
                         csvParser.countByOrigDest(CSV_FILE_NAME);
                         break;
                     case 3:
-                        System.out.println("\n\tPrinting all data...\n\n");
-                        List<String[]> test = csvParser.readAllData(CSV_FILE_NAME);
-                        for (String[] row : test) { 
-                           for (String cell : row) { 
-                                System.out.print(cell + "\t"); 
-                            } 
-                            System.out.println(); 
-                        } 
+                        csvParser.countByVehicle(CSV_FILE_NAME);
                         break;
                     case 4:
+                        //TO-DO
+                        break;
+                    case 5:
+                        //TO-DO
+                        break;
+                    case 6:
                         exit = true;
                         break;
                     default:

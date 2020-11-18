@@ -13,3 +13,4 @@ buildNumber.properties
 
 #VSCode
 .vscode
+.project

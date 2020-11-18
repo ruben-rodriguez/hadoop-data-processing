@@ -84,9 +84,56 @@ public class CSVUtils {
 
     } 
 
-    public void countByOrigDest(String filename){
+    public void countByVehicle(String filename){
 
-        List<String[]> allData = new ArrayList<>();
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(filename).getFile());
+
+        try { 
+  
+            Map<String, Integer> vehicles = new HashMap<String,Integer>();
+            FileReader filereader = new FileReader(file.getAbsolutePath()); 
+            CSVReader csvReader = new CSVReaderBuilder(filereader) 
+                                      .withSkipLines(1) 
+                                      .build(); 
+
+            String[] row;
+
+            while ((row = csvReader.readNext()) != null) { 
+
+                if(!row[7].isEmpty()) {
+
+                    String vehicle = row[7];
+                
+                    if(vehicles.containsKey(vehicle)) {
+                        int count = vehicles.get(vehicle);
+                        vehicles.put(vehicle, count + 1);
+                    } else {
+                        vehicles.put(vehicle, 1);
+                    }
+    
+                }
+
+            }
+
+            System.out.println();
+            int mostFreqVehicle=(Collections.max(vehicles.values())); 
+            for (Entry<String, Integer> entry : vehicles.entrySet()) { 
+                if (entry.getValue() == mostFreqVehicle) {
+                    System.out.println("\tMost frecuent type of vehicle: " + entry.getKey() + " with " + mostFreqVehicle + " counts.");     // Print the key with max value
+                }
+            }
+
+            printMap(vehicles);
+
+        }
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+
+    }
+
+    public void countByOrigDest(String filename){
 
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(filename).getFile());
@@ -162,7 +209,7 @@ public class CSVUtils {
         Set < String > keys = map.keySet(); 
         TreeSet < String > sortedKeys = new TreeSet < > (keys);
         for (String str: sortedKeys) {
-            System.out.println("\tOrigin: " + str + " count: " + map.get(str));
+            System.out.println("\tValue: " + str + " count: " + map.get(str));
         }
 
     }

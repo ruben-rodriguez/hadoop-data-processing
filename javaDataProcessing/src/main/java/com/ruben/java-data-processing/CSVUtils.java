@@ -16,11 +16,135 @@ import java.text.DecimalFormat;
 
 
 public class CSVUtils { 
-      
-    public void getMeanPrice(String filename) {
-        
+
+    private String filename;
+    private File file;
+
+    public CSVUtils(String file) {
+
+        this.filename = file;
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+        this.file = new File(classLoader.getResource(this.filename).getFile());
+
+    }
+      
+    public void vehicleByLocation() {
+                
+        try { 
+  
+            Map<String, Map<String, Integer>> originVehicles = new HashMap<String, Map<String, Integer>>();
+            Map<String, Map<String, Integer>> destinationVehicles = new HashMap<String, Map<String, Integer>>();
+            String origin = "";
+            String destination = "";
+            String vehicle = "";
+
+            FileReader filereader = new FileReader(this.file.getAbsolutePath()); 
+            CSVReader csvReader = new CSVReaderBuilder(filereader) 
+                                      .withSkipLines(1) 
+                                      .build(); 
+                                    
+            String[] row;
+            
+            while ((row = csvReader.readNext()) != null) {
+
+                if(!row[2].isEmpty() && !row[3].isEmpty() && !row[7].isEmpty()) {
+
+                    origin = row[2];
+                    destination = row[3];
+                    vehicle = row[7];
+                
+                    if(!originVehicles.containsKey(origin)) {
+
+                        Map<String, Integer> types = new HashMap<String, Integer>();
+                        types.put(vehicle, 1);
+                        originVehicles.put(origin, types);
+
+                    } else {
+
+                        Map<String, Integer> types = originVehicles.get(origin);
+
+                        if(types.containsKey(vehicle)){
+
+                            int count = types.get(vehicle);
+                            types.put(vehicle, count + 1);
+
+                        } else {
+
+                            types.put(vehicle, 1);
+
+                        }
+
+                        originVehicles.put(origin, types);
+
+                    }
+
+                    if(!destinationVehicles.containsKey(destination)) {
+
+                        Map<String, Integer> types = new HashMap<String, Integer>();
+                        types.put(vehicle, 1);
+                        destinationVehicles.put(destination, types);
+
+                    } else {
+
+                        Map<String, Integer> types = destinationVehicles.get(destination);
+
+                        if(types.containsKey(vehicle)){
+
+                            int count = types.get(vehicle);
+                            types.put(vehicle, count + 1);
+
+                        } else {
+
+                            types.put(vehicle, 1);
+
+                        }
+
+                        destinationVehicles.put(destination, types);
+                    }
+                }
+            }
+
+            System.out.println();
+            for (Map.Entry<String,  Map<String, Integer>> entry : originVehicles.entrySet()) {
+                
+                Map<String, Integer> values = entry.getValue();
+
+                System.out.println("\tOrigin: " + entry.getKey());
+
+                for (Map.Entry<String, Integer> value : values.entrySet()) {
+
+                    System.out.println("\tType of Vehicle: " + value.getKey() + " count: " + value.getValue());
+
+                }
+                
+            }
+
+            System.out.println();
+            for (Map.Entry<String,  Map<String, Integer>> entry : destinationVehicles.entrySet()) {
+                
+                Map<String, Integer> values = entry.getValue();
+
+                System.out.println("\tDestination: " + entry.getKey());
+
+                for (Map.Entry<String, Integer> value : values.entrySet()) {
+
+                    System.out.println("\tType of Vehicle: " + value.getKey() + " count: " + value.getValue());
+
+                }
+            }
+
+            //System.out.println(originVehicles.toString());
+            //System.out.println(destinationVehicles.toString());
+            
+        }
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+
+    }
+
+
+    public void getMeanPrice() {
         
         try { 
   
@@ -76,12 +200,12 @@ public class CSVUtils {
     }
 
 
-    public List<String[]> readAllData(String filename) {
+    public List<String[]> readAllData() {
 
         List<String[]> allData = new ArrayList<>();
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+        File file = new File(classLoader.getResource(this.filename).getFile());
 
         try { 
   
@@ -101,10 +225,7 @@ public class CSVUtils {
 
     } 
 
-    public void countByVehicle(String filename){
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+    public void countByVehicle() {
 
         try { 
   
@@ -150,16 +271,13 @@ public class CSVUtils {
 
     }
 
-    public void countByOrigDest(String filename){
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+    public void countByOrigDest() {
 
         try { 
   
             Map<String, Integer> origins = new HashMap<String,Integer>();
             Map<String, Integer> destinations = new HashMap<String,Integer>();
-            FileReader filereader = new FileReader(file.getAbsolutePath()); 
+            FileReader filereader = new FileReader(this.file.getAbsolutePath()); 
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 

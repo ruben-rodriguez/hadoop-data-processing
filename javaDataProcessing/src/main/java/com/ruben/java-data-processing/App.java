@@ -2,7 +2,6 @@ package com.ruben.javaDataProcessing;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.List; 
 
 /**
  * 
@@ -30,7 +29,7 @@ public class App
         
             try {
 
-                CSVUtils csvParser = new CSVUtils();
+                CSVUtils csvParser = new CSVUtils(CSV_FILE_NAME);
                 System.out.print("\tEnter a valid option from menu: ");
                 option = sn.nextInt();
 
@@ -39,16 +38,16 @@ public class App
                         //TO-DO
                         break;
                     case 2:
-                        csvParser.countByOrigDest(CSV_FILE_NAME);
+                        csvParser.countByOrigDest();
                         break;
                     case 3:
-                        csvParser.countByVehicle(CSV_FILE_NAME);
+                        csvParser.countByVehicle();
                         break;
                     case 4:
-                        csvParser.getMeanPrice(CSV_FILE_NAME);
+                        csvParser.getMeanPrice();
                         break;
                     case 5:
-                        //TO-DO
+                        csvParser.vehicleByLocation();
                         break;
                     case 6:
                         exit = true;

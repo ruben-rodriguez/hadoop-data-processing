@@ -42,6 +42,7 @@ public class CSVUtils {
             
             Map<String, Integer> weekdays = new HashMap<String,Integer>();
             Map<String, Integer> times = new HashMap<String,Integer>();
+            Map<String, Integer> combined = new HashMap<String,Integer>();
             BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
@@ -58,9 +59,12 @@ public class CSVUtils {
 
                     SimpleDateFormat weekDayFormat = new SimpleDateFormat("EEEE");
                     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat combinedFormat = new SimpleDateFormat("EEEE HH:mm");
 
                     String weekDay = weekDayFormat.format(departure).toString();
                     String time = timeFormat.format(departure).toString();
+                    String combinedDate = combinedFormat.format(departure).toString();
+
                     
                     if(weekdays.containsKey(weekDay)) {
                         int count = weekdays.get(weekDay);
@@ -75,9 +79,24 @@ public class CSVUtils {
                     } else {
                         times.put(time, 1);
                     }
+
+                    if(combined.containsKey(combinedDate)) {
+                        int count = combined.get(combinedDate);
+                        combined.put(combinedDate, count + 1);
+                    } else {
+                        combined.put(combinedDate, 1);
+                    }
     
                 }
 
+            }
+
+            System.out.println();
+            int mostSchedule=(Collections.max(combined.values())); 
+            for (Entry<String, Integer> entry : combined.entrySet()) { 
+                if (entry.getValue() == mostSchedule) {
+                    System.out.println("\tMost frecuent schedule: " + entry.getKey() + " with " + mostSchedule + " counts.");     // Print the key with max value
+                }
             }
 
             System.out.println();
@@ -87,7 +106,6 @@ public class CSVUtils {
                     System.out.println("\tMost frecuent day of the week: " + entry.getKey() + " with " + mostFreqWeekday + " counts.");     // Print the key with max value
                 }
             }
-            printMap(weekdays);
 
             System.out.println();
             int mostFreqTime=(Collections.max(times.values())); 
@@ -96,7 +114,6 @@ public class CSVUtils {
                     System.out.println("\tMost frecuent time of trip is: " + entry.getKey() + " with " + mostFreqTime + " counts.");     // Print the key with max value
                 }
             }
-            printMap(times);
 
         }
         catch (Exception e) { 

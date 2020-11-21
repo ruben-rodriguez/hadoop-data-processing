@@ -1,0 +1,24 @@
+name: Pull Request Workflow
+
+on: [pull_request]
+
+jobs:
+  java:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        javaApps: [javaDataProcessing]
+    defaults:
+      run:
+        working-directory: ${{ matrix.javaApps }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Maven install, test and assembly
+        run: |
+          mvn clean install
+          mvn test
+          mvn clean compile assembly:single

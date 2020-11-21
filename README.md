@@ -21,3 +21,9 @@ $: mvn exec:java -Dexec.mainClass="com.ruben.javaDataProcessing.App"
 ```
 $: mvn clean compile assembly:single
 ```
+
+After assembly is complete, jar can be executed by issuing:
+
+```
+$: java -jar target/javaDataProcessing-1.0-SNAPSHOT-jar-with-dependencies.jar
+```

@@ -14,3 +14,10 @@ $: mvn compile
 
 ```
 $: mvn exec:java -Dexec.mainClass="com.ruben.javaDataProcessing.App"
+```
+
+#### Assembly
+
+```
+$: mvn clean compile assembly:single
+```

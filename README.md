@@ -4,6 +4,11 @@ The purpose is to extract statistics from this Dataset [Spanish Rail Tickets Pri
 
 ## Base Java App: javaDataProcessing
 
+#### Requirements
+
+- Java: 1.8.0
+- Maven: Apache Maven 3.6.3
+
 #### Compile
 
 ```

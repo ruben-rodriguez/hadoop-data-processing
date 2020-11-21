@@ -1,6 +1,10 @@
 package com.ruben.javaDataProcessing;
 
-import java.io.FileReader; 
+import java.io.BufferedReader; 
+import java.io.Reader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,19 +17,108 @@ import java.util.Arrays;
 import com.opencsv.*; 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 
 
 public class CSVUtils { 
 
     private String filename;
-    private File file;
+    private Reader inputFile;
 
-    public CSVUtils(String file) {
+    public CSVUtils(String filename) {
 
-        this.filename = file;
+        this.filename = filename;
         ClassLoader classLoader = getClass().getClassLoader();
-        this.file = new File(classLoader.getResource(this.filename).getFile());
+        File file = new File(classLoader.getResource(this.filename).getFile());
+        this.inputFile = new InputStreamReader(classLoader.getResourceAsStream(this.filename)); 
 
+    }
+
+
+    public void schedules() {
+
+        try {
+            
+            Map<String, Integer> weekdays = new HashMap<String,Integer>();
+            Map<String, Integer> times = new HashMap<String,Integer>();
+            Map<String, Integer> combined = new HashMap<String,Integer>();
+            BufferedReader filereader = new BufferedReader(this.inputFile);
+            CSVReader csvReader = new CSVReaderBuilder(filereader) 
+                                      .withSkipLines(1) 
+                                      .build(); 
+            
+            String[] row;
+        
+            while ((row = csvReader.readNext()) != null) {
+
+                if(!row[5].isEmpty()) {
+
+                    String date = row[5];
+                    Date departure = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date);
+
+                    SimpleDateFormat weekDayFormat = new SimpleDateFormat("EEEE");
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat combinedFormat = new SimpleDateFormat("EEEE HH:mm");
+
+                    String weekDay = weekDayFormat.format(departure).toString();
+                    String time = timeFormat.format(departure).toString();
+                    String combinedDate = combinedFormat.format(departure).toString();
+
+                    
+                    if(weekdays.containsKey(weekDay)) {
+                        int count = weekdays.get(weekDay);
+                        weekdays.put(weekDay, count + 1);
+                    } else {
+                        weekdays.put(weekDay, 1);
+                    }
+
+                    if(times.containsKey(time)) {
+                        int count = times.get(time);
+                        times.put(time, count + 1);
+                    } else {
+                        times.put(time, 1);
+                    }
+
+                    if(combined.containsKey(combinedDate)) {
+                        int count = combined.get(combinedDate);
+                        combined.put(combinedDate, count + 1);
+                    } else {
+                        combined.put(combinedDate, 1);
+                    }
+    
+                }
+
+            }
+
+            System.out.println();
+            int mostSchedule=(Collections.max(combined.values())); 
+            for (Entry<String, Integer> entry : combined.entrySet()) { 
+                if (entry.getValue() == mostSchedule) {
+                    System.out.println("\tMost frecuent schedule: " + entry.getKey() + " with " + mostSchedule + " counts.");     // Print the key with max value
+                }
+            }
+
+            System.out.println();
+            int mostFreqWeekday=(Collections.max(weekdays.values())); 
+            for (Entry<String, Integer> entry : weekdays.entrySet()) { 
+                if (entry.getValue() == mostFreqWeekday) {
+                    System.out.println("\tMost frecuent day of the week: " + entry.getKey() + " with " + mostFreqWeekday + " counts.");     // Print the key with max value
+                }
+            }
+
+            System.out.println();
+            int mostFreqTime=(Collections.max(times.values())); 
+            for (Entry<String, Integer> entry : times.entrySet()) { 
+                if (entry.getValue() == mostFreqTime) {
+                    System.out.println("\tMost frecuent time of trip is: " + entry.getKey() + " with " + mostFreqTime + " counts.");     // Print the key with max value
+                }
+            }
+
+        }
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
     }
       
     public void vehicleByLocation() {
@@ -38,7 +131,7 @@ public class CSVUtils {
             String destination = "";
             String vehicle = "";
 
-            FileReader filereader = new FileReader(this.file.getAbsolutePath()); 
+            BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 
@@ -132,9 +225,6 @@ public class CSVUtils {
 
                 }
             }
-
-            //System.out.println(originVehicles.toString());
-            //System.out.println(destinationVehicles.toString());
             
         }
         catch (Exception e) { 
@@ -149,7 +239,8 @@ public class CSVUtils {
         try { 
   
             Map<String, List<Double>> map = new HashMap<String, List<Double>>();
-            FileReader filereader = new FileReader(file.getAbsolutePath()); 
+
+            BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 
@@ -189,9 +280,7 @@ public class CSVUtils {
                 Double formatted = Double.valueOf(df.format(mean));
                 System.out.println("\tClass: " + entry.getKey() + " mean price: " + formatted);
               }
-            
-            //System.out.println(map.toString());
-            
+                        
         }
         catch (Exception e) { 
             e.printStackTrace(); 
@@ -204,12 +293,9 @@ public class CSVUtils {
 
         List<String[]> allData = new ArrayList<>();
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(this.filename).getFile());
-
         try { 
   
-            FileReader filereader = new FileReader(file.getAbsolutePath()); 
+            BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 
@@ -230,7 +316,8 @@ public class CSVUtils {
         try { 
   
             Map<String, Integer> vehicles = new HashMap<String,Integer>();
-            FileReader filereader = new FileReader(file.getAbsolutePath()); 
+
+            BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 
@@ -277,7 +364,8 @@ public class CSVUtils {
   
             Map<String, Integer> origins = new HashMap<String,Integer>();
             Map<String, Integer> destinations = new HashMap<String,Integer>();
-            FileReader filereader = new FileReader(this.file.getAbsolutePath()); 
+
+            BufferedReader filereader = new BufferedReader(this.inputFile);
             CSVReader csvReader = new CSVReaderBuilder(filereader) 
                                       .withSkipLines(1) 
                                       .build(); 

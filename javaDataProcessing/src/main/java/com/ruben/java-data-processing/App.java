@@ -35,7 +35,7 @@ public class App
 
                 switch (option) {
                     case 1:
-                        //TO-DO
+                        csvParser.schedules();
                         break;
                     case 2:
                         csvParser.countByOrigDest();

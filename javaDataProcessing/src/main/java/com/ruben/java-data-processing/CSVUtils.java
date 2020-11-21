@@ -409,15 +409,15 @@ public class CSVUtils {
                     System.out.println("\tMost frecuent origin: " + entry.getKey() + " with " + maxValueInOrigMap + " counts.");     // Print the key with max value
                 }
             }
+            printMap(origins);
 
+            System.out.println();
             int maxValueInDstMap=(Collections.max(destinations.values())); 
             for (Entry<String, Integer> entry : destinations.entrySet()) {  
                 if (entry.getValue() == maxValueInDstMap) {
                     System.out.println("\tMost frecuent destination: " + entry.getKey() + " with " + maxValueInDstMap + " counts.");     // Print the key with max value
                 }
             }
-
-            printMap(origins);
             printMap(destinations);
 
         }

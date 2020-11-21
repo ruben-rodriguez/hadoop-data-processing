@@ -17,6 +17,8 @@ public class App
         boolean exit = false;
         int option;
 
+        long startTime, endTime;
+
         while (!exit) {
 
             System.out.println();
@@ -35,19 +37,59 @@ public class App
 
                 switch (option) {
                     case 1:
+                        startTime = System.currentTimeMillis(); 
+
                         csvParser.schedules();
+
+                        endTime = System.currentTimeMillis(); 
+
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime)); 
+
                         break;
                     case 2:
+                        startTime = System.currentTimeMillis();
+
                         csvParser.countByOrigDest();
+
+                        endTime = System.currentTimeMillis(); 
+
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime)); 
+
                         break;
                     case 3:
+                        startTime = System.currentTimeMillis();
+
                         csvParser.countByVehicle();
+
+                        endTime = System.currentTimeMillis(); 
+
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime)); 
+
                         break;
                     case 4:
+                        startTime = System.currentTimeMillis();
+
                         csvParser.getMeanPrice();
+
+                        endTime = System.currentTimeMillis(); 
+
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime)); 
+
                         break;
                     case 5:
+                        startTime = System.currentTimeMillis();
+
                         csvParser.vehicleByLocation();
+
+                        endTime = System.currentTimeMillis(); 
+
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime)); 
+
                         break;
                     case 6:
                         exit = true;

@@ -47,14 +47,13 @@ public class App
             String outputDir = cmd.getOptionValue("output");
 
             switch (app) {
-                case "Vehicle":
+                case "Vehicles":
 
                     VehicleCount.VehicleCountJob vcCountJob = new VehicleCount.VehicleCountJob(inputDir, outputDir);
-                    
+
                     try {
 
                         vcCountJob.execute();
-                    
 
                     } catch (Exception ex) {
 
@@ -63,6 +62,20 @@ public class App
                     }
                     
                     break;
+
+                case "Locations":
+
+                    LocationsCount.LocationsCountJob lcCountJob = new LocationsCount.LocationsCountJob(inputDir, outputDir);
+
+                    try {
+
+                        lcCountJob.execute();
+
+                    } catch (Exception ex) {
+
+                        System.out.println(ex.getMessage());
+
+                    }
             
                 default:
                     break;

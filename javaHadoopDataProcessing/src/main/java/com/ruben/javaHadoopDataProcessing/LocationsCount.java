@@ -17,11 +17,11 @@ import org.apache.log4j.Logger;
 
 import com.opencsv.*; 
 
-public class VehicleCount {
+public class LocationsCount {
 
-  public static class VehicleCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+  public static class LocationsCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-    private Logger logger = Logger.getLogger(VehicleCountMapper.class);
+    private Logger logger = Logger.getLogger(LocationsCountMapper.class);
 
     private final IntWritable one = new IntWritable(1);
     private Text word = new Text();
@@ -34,13 +34,18 @@ public class VehicleCount {
 
             try {
 
-              CSVParser parser = new CSVParser();
-              String[] row = parser.parseLine(value.toString());
+                CSVParser parser = new CSVParser();
+                String[] row = parser.parseLine(value.toString());
+                String origin = "";
+                String destination = "";
 
-                if(!row[7].isEmpty()) {
+                if(!row[2].isEmpty() && !row[3].isEmpty()) {
 
-                    String vehicle = row[7];
-                    context.write(new Text(vehicle), new IntWritable(1));
+                    origin = row[2];
+                    destination = row[3];
+
+                    context.write(new Text("O:"+ origin), new IntWritable(1));
+                    context.write(new Text("D:" + destination), new IntWritable(1));
         
                 }
                         
@@ -52,9 +57,9 @@ public class VehicleCount {
     }
   }
 
-  public static class VehicleCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Logger logger = Logger.getLogger(VehicleCountReducer.class);
+    private Logger logger = Logger.getLogger(LocationsCountReducer.class);
     private IntWritable result = new IntWritable();
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
@@ -73,28 +78,28 @@ public class VehicleCount {
     }
   }
 
-  public static class VehicleCountJob {
+  public static class LocationsCountJob {
 
     private String inputDir;
     private String outputDir;
 
-    public VehicleCountJob (String input, String output) {
+    public LocationsCountJob (String input, String output) {
 
       this.inputDir = input;
       this.outputDir = output;
 
     }
 
-    private Logger logger = Logger.getLogger(VehicleCountJob.class);
+    private Logger logger = Logger.getLogger(LocationsCountJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {
 
       Job job = new Job();
-      job.setJarByClass(VehicleCount.class);
+      job.setJarByClass(LocationsCount.class);
   
-      job.setMapperClass(VehicleCountMapper.class);
-      job.setReducerClass(VehicleCountReducer.class);
+      job.setMapperClass(LocationsCountMapper.class);
+      job.setReducerClass(LocationsCountReducer.class);
   
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);

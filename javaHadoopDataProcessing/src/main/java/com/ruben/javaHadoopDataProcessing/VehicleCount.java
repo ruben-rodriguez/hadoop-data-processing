@@ -19,9 +19,7 @@ import com.opencsv.*;
 
 public class VehicleCount {
 
-  public VehicleCount() {}
-
-  public class VehicleCountMapper extends Mapper<Object, Text, Text, IntWritable> {
+  public static class VehicleCountMapper extends Mapper<Object, Text, Text, IntWritable> {
 
     private Logger logger = Logger.getLogger(VehicleCountMapper.class);
 
@@ -54,7 +52,7 @@ public class VehicleCount {
     }
   }
 
-  public class VehicleCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class VehicleCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     private Logger logger = Logger.getLogger(VehicleCountReducer.class);
     private IntWritable result = new IntWritable();
@@ -76,7 +74,7 @@ public class VehicleCount {
   }
 
 
-  public class VehicleCountJob {
+  public static class VehicleCountJob {
 
     private String inputDir;
     private String outputDir;

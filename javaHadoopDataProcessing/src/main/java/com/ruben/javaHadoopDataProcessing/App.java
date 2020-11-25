@@ -49,8 +49,8 @@ public class App
             switch (app) {
                 case "Vehicle":
 
-                    VehicleCount vcCount = new VehicleCount();
-                    VehicleCount.VehicleCountJob vcCountJob = vcCount.new VehicleCountJob(inputDir, outputDir);
+                    VehicleCount.VehicleCountJob vcCountJob = new VehicleCount.VehicleCountJob(inputDir, outputDir);
+                    
                     try {
 
                         vcCountJob.execute();

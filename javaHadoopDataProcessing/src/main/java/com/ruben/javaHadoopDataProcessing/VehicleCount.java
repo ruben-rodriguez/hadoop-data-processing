@@ -19,7 +19,7 @@ import com.opencsv.*;
 
 public class VehicleCount {
 
-  public static class VehicleCountMapper extends Mapper<Object, Text, Text, IntWritable> {
+  public static class VehicleCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     private Logger logger = Logger.getLogger(VehicleCountMapper.class);
 

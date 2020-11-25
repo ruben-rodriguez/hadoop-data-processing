@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -32,7 +32,7 @@ public class App
 
         try {
 
-            CommandLineParser parser = new DefaultParser();
+            BasicParser parser = new BasicParser();
             CommandLine cmd = parser.parse( options, args);
 
             System.out.println(cmd.getArgList().size());
@@ -61,7 +61,6 @@ public class App
                         System.out.println(ex.getMessage());
 
                     }
-     
                     
                     break;
             

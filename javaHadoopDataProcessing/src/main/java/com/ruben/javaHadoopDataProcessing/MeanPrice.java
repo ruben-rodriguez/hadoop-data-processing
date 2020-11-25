@@ -40,7 +40,7 @@ public class MeanPrice {
                 if(!row[8].isEmpty() && !row[9].isEmpty()) {
 
                     String fare = row[8];
-                    Long rowPrice = Long.parseLong(row[9]);
+                    Double rowPrice = Double.parseLong(row[9]);
 
                     context.write(new Text(fare), new DoubleWritable(rowPrice));
 

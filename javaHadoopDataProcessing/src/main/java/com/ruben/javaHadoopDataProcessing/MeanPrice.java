@@ -91,7 +91,6 @@ public class MeanPrice {
     }
 
     private Logger logger = Logger.getLogger(MeanPriceJob.class);
-    private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {
 
@@ -102,7 +101,7 @@ public class MeanPrice {
       job.setReducerClass(MeanPriceReducer.class);
   
       job.setOutputKeyClass(Text.class);
-      job.setOutputValueClass(IntWritable.class);
+      job.setOutputValueClass(DoubleWritable.class);
   
       //Takes CSV input data and output target by args
       FileInputFormat.addInputPath(job, new Path(this.inputDir));

@@ -20,13 +20,13 @@ import com.opencsv.*;
 
 public class MeanPrice {
 
-  public static class MeanPriceMapper extends Mapper<DoubleWritable, Text, Text, DoubleWritable> {
+  public static class MeanPriceMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
     private Logger logger = Logger.getLogger(MeanPriceMapper.class);
 
     private final IntWritable one = new IntWritable(1);
 
-    public void map(DoubleWritable key, Text value, Context context) throws IOException, 
+    public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
 
         //Skip CSV header

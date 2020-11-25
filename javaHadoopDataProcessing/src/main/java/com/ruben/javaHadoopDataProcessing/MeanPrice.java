@@ -7,6 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -17,13 +18,15 @@ import org.apache.log4j.Logger;
 
 import com.opencsv.*; 
 
-public class VehicleCount {
+public class MeanPrice {
 
-  public static class VehicleCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+  public static class MeanPriceMapper extends Mapper<DoubleWritable, Text, Text, DoubleWritable> {
 
-    private Logger logger = Logger.getLogger(VehicleCountMapper.class);
+    private Logger logger = Logger.getLogger(MeanPriceMapper.class);
 
-    public void map(LongWritable key, Text value, Context context) throws IOException, 
+    private final IntWritable one = new IntWritable(1);
+
+    public void map(DoubleWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
 
         //Skip CSV header
@@ -31,14 +34,16 @@ public class VehicleCount {
 
             try {
 
-              CSVParser parser = new CSVParser();
-              String[] row = parser.parseLine(value.toString());
+                CSVParser parser = new CSVParser();
+                String[] row = parser.parseLine(value.toString());
 
-                if(!row[7].isEmpty()) {
+                if(!row[8].isEmpty() && !row[9].isEmpty()) {
 
-                    String vehicle = row[7];
-                    context.write(new Text(vehicle), new IntWritable(1));
-        
+                    String fare = row[8];
+                    Long rowPrice = Long.parseLong(row[9]);
+
+                    context.write(new Text(fare), new DoubleWritable(rowPrice));
+
                 }
                         
             } catch (Exception e) { 
@@ -49,48 +54,52 @@ public class VehicleCount {
     }
   }
 
-  public static class VehicleCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class MeanPriceReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
-    private Logger logger = Logger.getLogger(VehicleCountReducer.class);
+    private Logger logger = Logger.getLogger(MeanPriceReducer.class);
 
-    public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
+    public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, 
         InterruptedException {
 
+        Double sum = 0.0;
         int count = 0;
         
-        for (IntWritable value : values) {
+        for (DoubleWritable value : values) {
 
+          sum = value.get() + sum;
           count++;
 
         }
+
+        Double total = sum / count;
         
-        context.write(key, new IntWritable(count));
+        context.write(key, new DoubleWritable(total));
 
     }
   }
 
-  public static class VehicleCountJob {
+  public static class MeanPriceJob {
 
     private String inputDir;
     private String outputDir;
 
-    public VehicleCountJob (String input, String output) {
+    public MeanPriceJob (String input, String output) {
 
       this.inputDir = input;
       this.outputDir = output;
 
     }
 
-    private Logger logger = Logger.getLogger(VehicleCountJob.class);
+    private Logger logger = Logger.getLogger(MeanPriceJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {
 
       Job job = new Job();
-      job.setJarByClass(VehicleCount.class);
+      job.setJarByClass(MeanPrice.class);
   
-      job.setMapperClass(VehicleCountMapper.class);
-      job.setReducerClass(VehicleCountReducer.class);
+      job.setMapperClass(MeanPriceMapper.class);
+      job.setReducerClass(MeanPriceReducer.class);
   
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);

@@ -23,9 +23,6 @@ public class LocationsCount {
 
     private Logger logger = Logger.getLogger(LocationsCountMapper.class);
 
-    private final IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-
     public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
 
@@ -44,8 +41,8 @@ public class LocationsCount {
                     origin = row[2];
                     destination = row[3];
 
-                    context.write(new Text("O:"+ origin), new IntWritable(1));
-                    context.write(new Text("D:" + destination), new IntWritable(1));
+                    context.write(new Text("ORIGIN:"+ origin), new IntWritable(1));
+                    context.write(new Text("DESTINATION:" + destination), new IntWritable(1));
         
                 }
                         
@@ -60,7 +57,6 @@ public class LocationsCount {
   public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     private Logger logger = Logger.getLogger(LocationsCountReducer.class);
-    private IntWritable result = new IntWritable();
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
         InterruptedException {

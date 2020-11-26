@@ -9,15 +9,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.log4j.Logger;
 
 /**
  * 
  */
 public class App 
 {
-
-    private static Logger logger = Logger.getLogger(App.class);
 
     public static void main( String[] args )
     {
@@ -57,11 +54,12 @@ public class App
                         vcCountJob.execute();
 
                         endTime = System.currentTimeMillis(); 
-                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        logger.error(ex.getMessage());
+                        System.out.println(ex.getMessage());
 
                     }
                     
@@ -78,11 +76,12 @@ public class App
                         lcCountJob.execute();
 
                         endTime = System.currentTimeMillis(); 
-                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        logger.error(ex.getMessage());
+                        System.out.println(ex.getMessage());
 
                     }
 
@@ -99,11 +98,12 @@ public class App
                         meanPriceJob.execute();
 
                         endTime = System.currentTimeMillis(); 
-                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        logger.error(ex.getMessage());
+                        System.out.println(ex.getMessage());
 
                     }
 
@@ -120,11 +120,12 @@ public class App
                         schedulesJob.execute();
 
                         endTime = System.currentTimeMillis(); 
-                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        logger.error(ex.getMessage());
+                        System.out.println(ex.getMessage());
 
                     }
 
@@ -141,11 +142,12 @@ public class App
                         LocationsVehiclesJob.execute();
 
                         endTime = System.currentTimeMillis(); 
-                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        logger.error(ex.getMessage());
+                        System.out.println(ex.getMessage());
 
                     }
 
@@ -159,7 +161,7 @@ public class App
 
         } catch (org.apache.commons.cli.ParseException ex) {
 
-            logger.error(ex.getMessage());
+            System.out.println(ex.getMessage());
             new HelpFormatter().printHelp(App.class.getCanonicalName(), options );
 
         }

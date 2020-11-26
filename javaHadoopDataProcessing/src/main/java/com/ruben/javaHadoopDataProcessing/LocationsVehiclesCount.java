@@ -1,7 +1,6 @@
 package com.ruben.javaHadoopDataProcessing;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -13,16 +12,15 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.opencsv.*; 
 
-public class LocationsCount {
+public class LocationsVehiclesCount {
 
-  public static class LocationsCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+  public static class LocationsVehiclesCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-    private Log logger = LogFactory.getLog(LocationsCountMapper.class);
+    private Logger logger = Logger.getLogger(LocationsVehiclesCountMapper.class);
 
     public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
@@ -36,14 +34,17 @@ public class LocationsCount {
                 String[] row = parser.parseLine(value.toString());
                 String origin = "";
                 String destination = "";
+                String vehicle = "";
+                
 
-                if(!row[2].isEmpty() && !row[3].isEmpty()) {
+                if(!row[2].isEmpty() && !row[3].isEmpty() && !row[7].isEmpty()) {
 
                     origin = row[2];
                     destination = row[3];
+                    vehicle = row[7];
 
-                    context.write(new Text("ORIGIN:"+ origin), new IntWritable(1));
-                    context.write(new Text("DESTINATION:" + destination), new IntWritable(1));
+                    context.write(new Text(origin+":"+vehicle), new IntWritable(1));
+                    context.write(new Text(destination+":"+vehicle), new IntWritable(1));
         
                 }
                         
@@ -55,9 +56,9 @@ public class LocationsCount {
     }
   }
 
-  public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class LocationsVehiclesCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Log logger = LogFactory.getLog(LocationsCountReducer.class);
+    private Logger logger = Logger.getLogger(LocationsVehiclesCountReducer.class);
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
         InterruptedException {
@@ -75,30 +76,28 @@ public class LocationsCount {
     }
   }
 
-  public static class LocationsCountJob {
+  public static class LocationsVehiclesCountJob {
 
     private String inputDir;
     private String outputDir;
 
-    public LocationsCountJob (String input, String output) {
+    public LocationsVehiclesCountJob (String input, String output) {
 
       this.inputDir = input;
       this.outputDir = output;
 
     }
 
-    private Log logger = LogFactory.getLog(LocationsCountJob.class);
+    private Logger logger = Logger.getLogger(LocationsVehiclesCountJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {
 
-      long startTime, endTime;
-
       Job job = new Job();
-      job.setJarByClass(LocationsCount.class);
+      job.setJarByClass(LocationsVehiclesCount.class);
   
-      job.setMapperClass(LocationsCountMapper.class);
-      job.setReducerClass(LocationsCountReducer.class);
+      job.setMapperClass(LocationsVehiclesCountMapper.class);
+      job.setReducerClass(LocationsVehiclesCountReducer.class);
   
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);
@@ -106,13 +105,8 @@ public class LocationsCount {
       //Takes CSV input data and output target by args
       FileInputFormat.addInputPath(job, new Path(this.inputDir));
       FileOutputFormat.setOutputPath(job, new Path(this.outputDir));
-
-      startTime = System.currentTimeMillis();
+  
       System.exit(job.waitForCompletion(true) ? 0 : 1);
-      endTime = System.currentTimeMillis(); 
-
-      System.out.println("\n\tTime taken in milli seconds: "
-                           + (endTime - startTime));
   
     }
   }

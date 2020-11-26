@@ -1,7 +1,8 @@
 package com.ruben.javaHadoopDataProcessing;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -13,16 +14,15 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.opencsv.*; 
 
-public class LocationsCount {
+public class SchedulesCount {
 
-  public static class LocationsCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+  public static class SchedulesCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-    private Log logger = LogFactory.getLog(LocationsCountMapper.class);
+    private Logger logger = Logger.getLogger(SchedulesCountMapper.class);
 
     public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
@@ -34,16 +34,24 @@ public class LocationsCount {
 
                 CSVParser parser = new CSVParser();
                 String[] row = parser.parseLine(value.toString());
-                String origin = "";
-                String destination = "";
+                
 
-                if(!row[2].isEmpty() && !row[3].isEmpty()) {
+                if(!row[5].isEmpty()) {
 
-                    origin = row[2];
-                    destination = row[3];
+                    String date = row[5];
+                    Date departure = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date);
 
-                    context.write(new Text("ORIGIN:"+ origin), new IntWritable(1));
-                    context.write(new Text("DESTINATION:" + destination), new IntWritable(1));
+                    SimpleDateFormat weekDayFormat = new SimpleDateFormat("EEEE");
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat combinedFormat = new SimpleDateFormat("EEEE HH:mm");
+
+                    String weekDay = weekDayFormat.format(departure).toString();
+                    String time = timeFormat.format(departure).toString();
+                    String combinedDate = combinedFormat.format(departure).toString();
+
+                    context.write(new Text(weekDay), new IntWritable(1));
+                    context.write(new Text(time), new IntWritable(1));
+                    context.write(new Text(combinedDate), new IntWritable(1));
         
                 }
                         
@@ -55,9 +63,9 @@ public class LocationsCount {
     }
   }
 
-  public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class SchedulesCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Log logger = LogFactory.getLog(LocationsCountReducer.class);
+    private Logger logger = Logger.getLogger(SchedulesCountReducer.class);
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
         InterruptedException {
@@ -75,30 +83,28 @@ public class LocationsCount {
     }
   }
 
-  public static class LocationsCountJob {
+  public static class SchedulesCountJob {
 
     private String inputDir;
     private String outputDir;
 
-    public LocationsCountJob (String input, String output) {
+    public SchedulesCountJob (String input, String output) {
 
       this.inputDir = input;
       this.outputDir = output;
 
     }
 
-    private Log logger = LogFactory.getLog(LocationsCountJob.class);
+    private Logger logger = Logger.getLogger(SchedulesCountJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {
 
-      long startTime, endTime;
-
       Job job = new Job();
-      job.setJarByClass(LocationsCount.class);
+      job.setJarByClass(SchedulesCount.class);
   
-      job.setMapperClass(LocationsCountMapper.class);
-      job.setReducerClass(LocationsCountReducer.class);
+      job.setMapperClass(SchedulesCountMapper.class);
+      job.setReducerClass(SchedulesCountReducer.class);
   
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);
@@ -106,13 +112,8 @@ public class LocationsCount {
       //Takes CSV input data and output target by args
       FileInputFormat.addInputPath(job, new Path(this.inputDir));
       FileOutputFormat.setOutputPath(job, new Path(this.outputDir));
-
-      startTime = System.currentTimeMillis();
+  
       System.exit(job.waitForCompletion(true) ? 0 : 1);
-      endTime = System.currentTimeMillis(); 
-
-      System.out.println("\n\tTime taken in milli seconds: "
-                           + (endTime - startTime));
   
     }
   }

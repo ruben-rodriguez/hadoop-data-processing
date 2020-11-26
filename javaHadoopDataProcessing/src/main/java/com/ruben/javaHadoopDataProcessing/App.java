@@ -16,8 +16,6 @@ import org.apache.commons.cli.ParseException;
 public class App 
 {
 
-    private static final String CSV_FILE_NAME = "sample.csv";
-
     public static void main( String[] args )
     {
         int option;
@@ -35,8 +33,6 @@ public class App
             BasicParser parser = new BasicParser();
             CommandLine cmd = parser.parse( options, args);
 
-            System.out.println(cmd.getArgList().size());
-
             if (cmd.hasOption("help")){
                 new HelpFormatter().printHelp("javaHadoopDataProcessing", options, true );  
                 return;  
@@ -53,7 +49,13 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         vcCountJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
@@ -69,7 +71,13 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         lcCountJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
@@ -79,13 +87,41 @@ public class App
 
                     break;
                 
-                 case "Price":
+                case "Price":
 
                     MeanPrice.MeanPriceJob meanPriceJob = new MeanPrice.MeanPriceJob(inputDir, outputDir);
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         meanPriceJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
+
+                    } catch (Exception ex) {
+
+                        System.out.println(ex.getMessage());
+
+                    }
+
+                    break;
+
+                case "Schedules":
+
+                SchedulesCount.SchedulesCountJob schedulesJob = new SchedulesCount.SchedulesCountJob(inputDir, outputDir);
+
+                    try {
+
+                        startTime = System.currentTimeMillis(); 
+
+                        schedulesJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
 
                     } catch (Exception ex) {
 
@@ -95,6 +131,29 @@ public class App
 
                     break;
             
+                case "LocationsVehicles":
+
+                LocationsVehiclesCount.LocationsVehiclesCountJob LocationsVehiclesJob = new LocationsVehiclesCount.LocationsVehiclesCountJob(inputDir, outputDir);
+
+                    try {
+
+                        startTime = System.currentTimeMillis(); 
+
+                        LocationsVehiclesJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        System.out.println("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
+
+                    } catch (Exception ex) {
+
+                        System.out.println(ex.getMessage());
+
+                    }
+
+                    break;
+
+
                 default:
                     break;
             }

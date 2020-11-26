@@ -13,7 +13,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.opencsv.*; 
 
@@ -21,7 +22,7 @@ public class LocationsCount {
 
   public static class LocationsCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-    private Logger logger = Logger.getLogger(LocationsCountMapper.class);
+    private Logger logger = LogFactory.getLog(LocationsCountMapper.class);
 
     public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
@@ -56,7 +57,7 @@ public class LocationsCount {
 
   public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Logger logger = Logger.getLogger(LocationsCountReducer.class);
+    private Logger logger = LogFactory.getLogLogger(LocationsCountReducer.class);
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
         InterruptedException {
@@ -86,7 +87,7 @@ public class LocationsCount {
 
     }
 
-    private Logger logger = Logger.getLogger(LocationsCountJob.class);
+    private Logger logger = LogFactory.getLogLogger(LocationsCountJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {

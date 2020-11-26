@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class App 
 {
 
-    private Logger logger = Logger.getLogger(App.class);
+    private static Logger logger = Logger.getLogger(App.class);
 
     public static void main( String[] args )
     {
@@ -132,13 +132,13 @@ public class App
             
                 case "LocationsVehicles":
 
-                LocationsVehiclesCount.LocationsVehiclesCountJob schedulesJob = new LocationsVehiclesCount.LocationsVehiclesCountJob(inputDir, outputDir);
+                LocationsVehiclesCount.LocationsVehiclesCountJob LocationsVehiclesJob = new LocationsVehiclesCount.LocationsVehiclesCountJob(inputDir, outputDir);
 
                     try {
 
                         startTime = System.currentTimeMillis(); 
 
-                        schedulesJob.execute();
+                        LocationsVehiclesJob.execute();
 
                         endTime = System.currentTimeMillis(); 
                         logger.info("Time taken in milli seconds: " + (endTime - startTime));
@@ -159,7 +159,7 @@ public class App
 
         } catch (org.apache.commons.cli.ParseException ex) {
 
-            System.out.println(ex.getMessage());
+            logger.error(ex.getMessage());
             new HelpFormatter().printHelp(App.class.getCanonicalName(), options );
 
         }

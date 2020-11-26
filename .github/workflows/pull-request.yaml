@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        javaApps: [javaDataProcessing]
+        javaApps: [javaDataProcessing, javaHadoopDataProcessing]
     defaults:
       run:
         working-directory: ${{ matrix.javaApps }}

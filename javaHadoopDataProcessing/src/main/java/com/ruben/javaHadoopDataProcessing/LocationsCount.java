@@ -22,7 +22,7 @@ public class LocationsCount {
 
   public static class LocationsCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-    private Logger logger = LogFactory.getLog(LocationsCountMapper.class);
+    private Log logger = LogFactory.getLog(LocationsCountMapper.class);
 
     public void map(LongWritable key, Text value, Context context) throws IOException, 
         InterruptedException {
@@ -57,7 +57,7 @@ public class LocationsCount {
 
   public static class LocationsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Logger logger = LogFactory.getLogLogger(LocationsCountReducer.class);
+    private Log logger = LogFactory.getLog(LocationsCountReducer.class);
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, 
         InterruptedException {
@@ -87,7 +87,7 @@ public class LocationsCount {
 
     }
 
-    private Logger logger = LogFactory.getLogLogger(LocationsCountJob.class);
+    private Log logger = LogFactory.getLog(LocationsCountJob.class);
     private IntWritable result = new IntWritable();
 
     public void execute() throws Exception {

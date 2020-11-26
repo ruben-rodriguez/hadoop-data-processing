@@ -79,13 +79,29 @@ public class App
 
                     break;
                 
-                 case "Price":
+                case "Price":
 
                     MeanPrice.MeanPriceJob meanPriceJob = new MeanPrice.MeanPriceJob(inputDir, outputDir);
 
                     try {
 
                         meanPriceJob.execute();
+
+                    } catch (Exception ex) {
+
+                        System.out.println(ex.getMessage());
+
+                    }
+
+                    break;
+
+                case "Schedules":
+
+                SchedulesCount.SchedulesCountJob schedulesJob = new SchedulesCount.SchedulesCountJob(inputDir, outputDir);
+
+                    try {
+
+                        schedulesJob.execute();
 
                     } catch (Exception ex) {
 

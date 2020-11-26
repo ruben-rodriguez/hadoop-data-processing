@@ -9,6 +9,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -16,7 +17,7 @@ import org.apache.commons.cli.ParseException;
 public class App 
 {
 
-    private static final String CSV_FILE_NAME = "sample.csv";
+    private Logger logger = Logger.getLogger(App.class);
 
     public static void main( String[] args )
     {
@@ -35,8 +36,6 @@ public class App
             BasicParser parser = new BasicParser();
             CommandLine cmd = parser.parse( options, args);
 
-            System.out.println(cmd.getArgList().size());
-
             if (cmd.hasOption("help")){
                 new HelpFormatter().printHelp("javaHadoopDataProcessing", options, true );  
                 return;  
@@ -53,11 +52,16 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         vcCountJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        System.out.println(ex.getMessage());
+                        logger.error(ex.getMessage());
 
                     }
                     
@@ -69,11 +73,16 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         lcCountJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        System.out.println(ex.getMessage());
+                        logger.error(ex.getMessage());
 
                     }
 
@@ -85,11 +94,16 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         meanPriceJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        System.out.println(ex.getMessage());
+                        logger.error(ex.getMessage());
 
                     }
 
@@ -101,16 +115,43 @@ public class App
 
                     try {
 
+                        startTime = System.currentTimeMillis(); 
+
                         schedulesJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
 
                     } catch (Exception ex) {
 
-                        System.out.println(ex.getMessage());
+                        logger.error(ex.getMessage());
 
                     }
 
                     break;
             
+                case "LocationsVehicles":
+
+                LocationsVehiclesCount.LocationsVehiclesCountJob schedulesJob = new LocationsVehiclesCount.LocationsVehiclesCountJob(inputDir, outputDir);
+
+                    try {
+
+                        startTime = System.currentTimeMillis(); 
+
+                        schedulesJob.execute();
+
+                        endTime = System.currentTimeMillis(); 
+                        logger.info("Time taken in milli seconds: " + (endTime - startTime));
+
+                    } catch (Exception ex) {
+
+                        logger.error(ex.getMessage());
+
+                    }
+
+                    break;
+
+
                 default:
                     break;
             }

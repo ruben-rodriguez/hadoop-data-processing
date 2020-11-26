@@ -91,6 +91,8 @@ public class LocationsCount {
 
     public void execute() throws Exception {
 
+      long startTime, endTime;
+
       Job job = new Job();
       job.setJarByClass(LocationsCount.class);
   
@@ -103,8 +105,13 @@ public class LocationsCount {
       //Takes CSV input data and output target by args
       FileInputFormat.addInputPath(job, new Path(this.inputDir));
       FileOutputFormat.setOutputPath(job, new Path(this.outputDir));
-  
+
+      startTime = System.currentTimeMillis();
       System.exit(job.waitForCompletion(true) ? 0 : 1);
+      endTime = System.currentTimeMillis(); 
+
+      logger.info("\n\tTime taken in milli seconds: "
+                           + (endTime - startTime));
   
     }
   }

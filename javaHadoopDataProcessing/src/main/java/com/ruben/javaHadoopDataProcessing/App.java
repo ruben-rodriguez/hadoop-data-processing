@@ -23,7 +23,7 @@ public class App
         long startTime, endTime;
 
         Options options = new Options();  
-        options.addOption("a", "app", true,  "Application to execute: Shedules, Vehicle, Locations");
+        options.addOption("a", "app", true,  "Application to execute: Shedules, Vehicles, Locations, Prices, LocationsVehicles");
         options.addOption("i", "input", true,  "Hadoop input dir ");
         options.addOption("o", "output", true,  "Hadoop output dir ");
         options.addOption("h", "help",  false, "Show help");
@@ -87,7 +87,7 @@ public class App
 
                     break;
                 
-                case "Price":
+                case "Prices":
 
                     MeanPrice.MeanPriceJob meanPriceJob = new MeanPrice.MeanPriceJob(inputDir, outputDir);
 
@@ -155,6 +155,8 @@ public class App
 
 
                 default:
+
+                    System.out.println("Application not available: " + app);
                     break;
             }
             

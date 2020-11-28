@@ -108,11 +108,14 @@ public class LocationsCount {
       FileOutputFormat.setOutputPath(job, new Path(this.outputDir));
 
       startTime = System.currentTimeMillis();
-      System.exit(job.waitForCompletion(true) ? 0 : 1);
+      boolean success = job.waitForCompletion(true);
+      //System.exit(job.waitForCompletion(true) ? 0 : 1);
       endTime = System.currentTimeMillis(); 
 
-      System.out.println("\n\tTime taken in milli seconds: "
-                           + (endTime - startTime));
+      logger.info("\n\tTime taken in milli seconds: "
+      + (endTime - startTime));
+
+      System.exit(success ? 0 : 1);
   
     }
   }

@@ -101,6 +101,8 @@ public class SchedulesCount {
     public void execute() throws Exception {
 
       Job job = new Job();
+      long startTime, endTime;
+
       job.setJarByClass(SchedulesCount.class);
   
       job.setMapperClass(SchedulesCountMapper.class);
@@ -113,7 +115,15 @@ public class SchedulesCount {
       FileInputFormat.addInputPath(job, new Path(this.inputDir));
       FileOutputFormat.setOutputPath(job, new Path(this.outputDir));
   
-      System.exit(job.waitForCompletion(true) ? 0 : 1);
+      startTime = System.currentTimeMillis();
+      boolean success = job.waitForCompletion(true);
+      //System.exit(job.waitForCompletion(true) ? 0 : 1);
+      endTime = System.currentTimeMillis(); 
+
+      logger.info("\n\tTime taken in milli seconds: "
+      + (endTime - startTime));
+
+      System.exit(success ? 0 : 1);
   
     }
   }

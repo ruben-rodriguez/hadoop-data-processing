@@ -9,4 +9,4 @@ df_load = sparkSession.read.option("header",True).csv('hdfs://hadoop-master:9000
 
 df_load.show()
 
-df_load.groupBy('vehicle').count().select('vehicle_type', f.col('count').alias('count')).show()
+df_load.groupBy('vehicle_type').count().select('vehicle_type', f.col('count').alias('count')).show()

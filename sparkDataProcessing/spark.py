@@ -7,7 +7,7 @@ from pyspark.sql.functions import sum, avg, max, min, mean, count
 
 sparkSession = SparkSession.builder.appName("example-pyspark-read").getOrCreate()
 
-df_load = sparkSession.read.option("header",True).csv('hdfs://hadoop-master:9000/dataProcessing/input/sample.csv')
+df_load = sparkSession.read.option("header",True).option("mode", "DROPMALFORMED").csv('hdfs://hadoop-master:9000/dataProcessing/input/sample.csv')
 
 df_load.show()
 

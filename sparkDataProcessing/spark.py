@@ -22,4 +22,4 @@ df_load.groupBy('origin', 'vehicle_type').count().select('origin', f.col('count'
 df_load.groupBy('vehicle_class').agg(
     avg("price").alias("avg_price"), \
     max("price").alias("max_price") \
-).drop().show()
+).dropna().show()

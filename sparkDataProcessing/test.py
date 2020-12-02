@@ -35,8 +35,8 @@ df_load.groupBy('vehicle_class').agg(
 ).dropna().show()
 df_load.write.csv("hdfs://hadoop-master:9000/dataProcessing/output/prices.csv")
 
-df_load.withColumn('Day', f.date_format('departure', 'EEEE')).groupBy('Day')count().select('Day', f.col('count').alias('count')).show()
+df_load.withColumn('Day', f.date_format('departure', 'EEEE')).groupBy('Day').count().select('Day', f.col('count').alias('count')).show()
 df_load.write.csv("hdfs://hadoop-master:9000/dataProcessing/output/schedules-weekday.csv")
 
-df_load.withColumn('Time', f.date_format('departure', 'Hm')).groupBy('Time')count().select('Time', f.col('count').alias('count')).show()
+df_load.withColumn('Time', f.date_format('departure', 'Hm')).groupBy('Time').count().select('Time', f.col('count').alias('count')).show()
 df_load.write.csv("hdfs://hadoop-master:9000/dataProcessing/output/schedules-time.csv")

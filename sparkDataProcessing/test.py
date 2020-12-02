@@ -1,18 +1,23 @@
-import sys
+import sys, time
 
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 
-#from pyspark.sql.functions import sum, avg, max, min, mean, count, date_format
 
-sparkSession = SparkSession.builder.appName("example-pyspark-read").getOrCreate()
+start = time.time()
+print("hello")
+end = time.time()
+print(end - start)
 
+sparkSession = SparkSession.builder.appName("Hadoop-Data-Processing").getOrCreate()
 df_load = sparkSession.read.option("header",True).csv('hdfs://hadoop-master:9000/dataProcessing/input/sample.csv')
 
-df_load.show()
-
+print("Counting Vehicle types")
+start = time.time()
 df_load.groupBy('vehicle_type').count().select('vehicle_type', f.col('count').alias('count')).show()
-#df_load.write.csv("hdfs://hadoop-master:9000/dataProcessing/output/vehicleTypes.csv")
+end = time.time()
+print("It took: ", end - start, " seconds")
+
 
 df_load.groupBy('destination').count().select('destination', f.col('count').alias('count')).show()
 

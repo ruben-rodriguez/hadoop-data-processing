@@ -30,4 +30,4 @@ df_load.groupBy('vehicle_class').agg(
 
 df_load.withColumn('Day', f.date_format('departure', 'EEEE')).groupBy('Day').count().select('Day', f.col('count').alias('count')).show()
 
-df_load.withColumn('Time', f.date_format('departure', 'Hm')).groupBy('Time').count().select('Time', f.col('count').alias('count')).show()
+df_load.withColumn('Time', f.date_format('departure', 'H:m')).groupBy('Time').count().select('Time', f.col('count').alias('count')).show()

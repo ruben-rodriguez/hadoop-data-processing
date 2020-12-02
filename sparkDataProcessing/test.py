@@ -19,10 +19,8 @@ df_load.groupBy('destination').count().select('destination', f.col('count').alia
 df_load.groupBy('origin').count().select('origin', f.col('count').alias('count')).show()
 
 
-df_load.groupBy('destination', 'vehicle_type').count().select('destination', f.col('count').alias('count')).show()
-
-
-df_load.groupBy('origin', 'vehicle_type').count().select('origin', f.col('count').alias('count')).show()
+df_load.groupBy('destination', 'vehicle_type').count().select('destination' , 'vehicle_type', f.col('count').alias('count')).show()
+df_load.groupBy('origin', 'vehicle_type').count().select('origin', 'vehicle_type', f.col('count').alias('count')).show()
 
 
 df_load.groupBy('vehicle_class').agg(

@@ -8,7 +8,7 @@ df_load = sparkSession.read.option("header",True).csv('hdfs://hadoop-master:9000
 
 print("Vehicle types count")
 start = time.time()
-df_load.groupBy('vehicle_type').count().select('vehicle_type', f.col('count').alias('count')).show(df_load.count, truncate = False)
+df_load.groupBy('vehicle_type').count().select('vehicle_type', f.col('count').alias('count')).show(df_load.count(), truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")
 
@@ -44,6 +44,6 @@ print("It took: ", round( end - start, 2), " seconds\n\n")
 
 print("Schedule counts by time")
 start = time.time()
-df_load.withColumn('Time', f.date_format('departure', 'H:m')).groupBy('Time').count().select('Time', f.col('count').alias('count')).show(truncate = False)
+df_load.withColumn('Time', f.date_format('departure', 'H:m')).groupBy('Time').count().select('Time', f.col('count').alias('count')).show(df_load.count(),truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")

@@ -14,15 +14,15 @@ print("It took: ", round( end - start, 2), " seconds\n\n")
 
 print("Destination and origin counts:")
 start = time.time()
-df_load.groupBy('destination').count().select('destination', f.col('count').alias('count')).show(truncate = False)
-df_load.groupBy('origin').count().select('origin', f.col('count').alias('count')).show(truncate = False)
+df_load.groupBy('destination').count().select('destination', f.col('count').alias('count')).show(df_load.count(), truncate = False)
+df_load.groupBy('origin').count().select('origin', f.col('count').alias('count')).show(df_load.count(), truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")
 
 print("Vehicle type counts by origin and destination")
 start = time.time()
-df_load.groupBy('destination', 'vehicle_type').count().select('destination' , 'vehicle_type', f.col('count').alias('count')).show(truncate = False)
-df_load.groupBy('origin', 'vehicle_type').count().select('origin', 'vehicle_type', f.col('count').alias('count')).show(truncate = False)
+df_load.groupBy('destination', 'vehicle_type').count().select('destination' , 'vehicle_type', f.col('count').alias('count')).show(df_load.count(), truncate = False)
+df_load.groupBy('origin', 'vehicle_type').count().select('origin', 'vehicle_type', f.col('count').alias('count')).show(df_load.count(), truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")
 
@@ -31,13 +31,13 @@ start = time.time()
 df_load.groupBy('vehicle_class').agg(
     f.avg("price").alias("avg_price"), \
     f.max("price").alias("max_price") \
-).dropna().show(truncate = False)
+).dropna().show(df_load.count(), truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")
 
 print("Schedule counts by weekday")
 start = time.time()
-df_load.withColumn('Day', f.date_format('departure', 'EEEE')).groupBy('Day').count().select('Day', f.col('count').alias('count')).show(truncate = False)
+df_load.withColumn('Day', f.date_format('departure', 'EEEE')).groupBy('Day').count().select('Day', f.col('count').alias('count')).show(df_load.count(),truncate = False)
 end = time.time()
 print("It took: ", round( end - start, 2), " seconds\n\n")
 
